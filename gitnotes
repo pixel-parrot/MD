@@ -4,6 +4,8 @@ git remote add upstream https://bitbucket.org/MistDude/md.git
 to clone into a new directory (done from root dir)
 git clone https://bitbucket.org/MistDude/md.git
 
+To initialize the push/pull commands:
+git remote add origin https://MistDude@bitbucket.org/MistDude/md.git
 
 Username on Bitbucket:
 MistDude
