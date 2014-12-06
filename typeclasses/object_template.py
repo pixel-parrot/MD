@@ -17,11 +17,11 @@ this change, you have to convert them manually e.g. with the
 @typeclass command.
 
 """
-from ev import Object as DefaultObject
-from src.utils import search
-import game.gamesrc.commands.cmdset
-import src.commands.cmdset
-from ev import create_object
+from evennia import DefaultObject
+from evennia.utils import search
+import commands.cmdset
+import evennia.commands.cmdset
+from evennia import create_object
 
 class Object(DefaultObject):
     """

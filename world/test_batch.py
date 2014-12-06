@@ -25,15 +25,15 @@ do it that way.
 
 #HEADER
 
-from ev import create_object, search_object
-from ev import Object
-from game.gamesrc.objects import character
-from game.gamesrc.objects import room
-from game.gamesrc.objects import exit
-from game.gamesrc.objects import object_template
-from game.gamesrc.objects import stackable_object
-from game.gamesrc.objects import stationary_object
-import game.gamesrc.commands.cmdset 
+from evennia import create_object, search_object
+from evennia import DefaultObject
+from typeclasses import characters
+from typeclasses import rooms
+from typeclasses import exits
+from typeclasses import object_template
+from typeclasses import stackable_object
+from typeclasses import stationary_object
+import commands.cmdset 
 
 
 #CODE (create testing rooms) arena

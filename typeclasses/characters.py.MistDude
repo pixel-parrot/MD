@@ -16,7 +16,7 @@ this change, you have to convert them manually e.g. with the
 @typeclass command.
 
 """
-from ev import Character as DefaultCharacter
+from evennia import DefaultCharacter
 
 import random as r
 
@@ -52,6 +52,11 @@ class Character(DefaultCharacter):
         self.db.middle_name = ''
         self.db.last_name = ''
         self.db.honorific_suffix = ''
+        self.db.namestring = self.db.first_name
+        # this holds all characters encountered. the key is the object's dbref,
+        #   their value is False if no name is known, given, or set until
+        #   it is known, given, or set
+        self.db.characters_met = {}
         self.db.description = ''
         self.db.object_title = ''
         self.db.deface_string = ''
@@ -67,7 +72,12 @@ class Character(DefaultCharacter):
     def rollStats(self):
         'Placeholder for stat-generation system'
 
-        self.msg(self.db.menuvar)
+        if self.db.menuvar == 1:
+            self.msg('peasant chosen')
+        if self.db.menuvar == 2:
+            self.msg('farmer chosen')
+        if self.db.menuvar == 3:
+            self.msg('pilot chosen')
         self.db.strength = r.randint(1,100)
         self.db.agility = r.randint(1,100)
         self.db.constitution = r.randint(1,100)

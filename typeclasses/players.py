@@ -20,9 +20,24 @@ You will also need to modify the connection screen to reflect the
 possibility to connect with a guest account. The setting file accepts
 several more options for customizing the Guest account system.
 
-"""
+Template module for Players
 
+Copy this module up one level and name it as you like, then
+use it as a template to create your own Player class.
+
+To make the default account login default to using a Player
+of your new type, change settings.BASE_PLAYER_TYPECLASS to point to
+your new class, e.g.
+
+settings.BASE_PLAYER_TYPECLASS = "game.gamesrc.objects.myplayer.MyPlayer"
+
+Note that objects already created in the database will not notice
+this change, you have to convert them manually e.g. with the
+@typeclass command.
+
+"""
 from evennia import DefaultPlayer, DefaultGuest
+
 
 class Player(DefaultPlayer):
     """
@@ -44,6 +59,8 @@ class Player(DefaultPlayer):
      name (string)- wrapper for user.username
      aliases (list of strings) - aliases to the object. Will be saved to database as AliasDB entries but returned as strings.
      dbref (int, read-only) - unique #id-number. Also "id" can be used.
+     dbobj (Player, read-only) - link to database model. dbobj.typeclass points back to this class
+     typeclass (Player, read-only) - this links back to this class as an identified only. Use self.swap_typeclass() to switch.
      date_created (string) - time stamp of object creation
      permissions (list of strings) - list of permission strings
 

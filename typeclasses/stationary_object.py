@@ -3,11 +3,11 @@
 Template for Stationary Objects
 
 """
-from ev import Object as DefaultObject
-from src.utils import search
-import game.gamesrc.commands.cmdset
-import src.commands.cmdset
-from ev import create_object
+from evennia import DefaultObject
+from evennia.utils import search
+import commands.cmdset
+import evennia.commands.cmdset
+from evennia import create_object
 
 class StationaryObject(DefaultObject):
     """

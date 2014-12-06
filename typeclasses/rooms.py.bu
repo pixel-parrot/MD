@@ -16,8 +16,8 @@ this change, you have to convert them manually e.g. with the
 
 """
 
-from ev import Room as DefaultRoom
-from src.utils import search
+from evennia import DefaultRoom
+from evennia.utils import search
 
 class Room(DefaultRoom):
     """

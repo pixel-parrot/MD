@@ -52,11 +52,6 @@ class Character(DefaultCharacter):
         self.db.middle_name = ''
         self.db.last_name = ''
         self.db.honorific_suffix = ''
-        self.db.namestring = self.db.first_name
-        # this holds all characters encountered. the key is the object's dbref,
-        #   their value is False if no name is known, given, or set until
-        #   it is known, given, or set
-        self.db.characters_met = {}
         self.db.description = ''
         self.db.object_title = ''
         self.db.deface_string = ''
