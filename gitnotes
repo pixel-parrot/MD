@@ -1,0 +1,46 @@
+------GIT CODE MANAGEMENT NOTES----------------------------
+Username on Bitbucket:
+MistDude
+Password on Bitbucket:
+ilikemoneyilikemoney
+
+To pull from a repository branch into a local branch, first make sure you are in
+    the branch you want to be in, then:
+git pull origin <name of remote branch>
+For example, from the MistDudette branch, do:
+git pull origin MistDudeStable
+
+To push a branch onto bitbucket, first make sure you are in the branch you want
+    to push, then:
+git push origin <remote branch to push to>
+example: git push origin MistDudette
+
+To create a new branch based off of a different existing branch on your
+    local machine:
+git branch <new branch name> <branch to copy from>
+To get to that branch:
+git checkout <branchname>
+
+To delete a branch, first checkout to a different branch then use:
+git branch -D <branch to delete>
+
+To merge changes into a branch from another branch:
+(for example, to update MistDudetteStable with changes from MistDudette)
+First checkout to the MistDudetteStable branch.
+git checkout MistDudetteStable
+Then merge in the changes:
+git merge MistDudette
+Finally, push those changes to the web:
+git push origin MistDudetteStable
+
+If you ever need to pull just one file from a different branch into the
+    branch you are working in currently use (making sure you are in the right
+    directory):
+git checkout <branch that has the file you want> <filename>
+
+If there are changes to a file that are staged for a commit, but you want to
+    revert to way it was before you made changes (cannot undo this):
+git reset HEAD <filename>
+git checkout <filename>
+
+

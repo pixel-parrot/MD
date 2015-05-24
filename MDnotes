@@ -1,0 +1,147 @@
+----GENERAL NOTES---------------------
+https://github.com/evennia/evennia/wiki/Version%20Control#updating-with-upstream-changes
+
+starting the virtualenv for the terminal that runs evennia:
+source /mdenv/pyenv/bin/activate
+
+[04:58] <Griatch> A rough suggestion for a useful regex would be for example: 
+
+r"(.*?)\s(from|on|next to)(.*?)\s(from|on|next to)\s(.*)"
+
+05:00] <Griatch> This accepts two preposition pairs only, and only the prepositions from,on and next to, but it handles space-separated prepositions and names just fine, so "Big rock from table next to Red wall" would be split into regex groups "Big Rock", "from", "table" "next to" and "Red Wall". 
+[05:01] <Griatch> It would need to be tested and fixed probably (regexes never work perfectly on the first try) but it gives an idea of what can be done with it. 
+
+[10:07] <Griatch> For those interested, the latest HTML version of Evennia's documentation is found at http://evennia.readthedocs.org/en/latest/
+
+
+[10:08] <Griatch> There is also the PDF version at https://media.readthedocs.org/pdf/evennia/latest/evennia.pdfhttps://github.com/evennia/evennia/blob/master/src/utils/evtable.py
+<Griatch> Evennia does have its own modules for centering text and making blocks (for example the evtable/evform modules). 
+
+
+[02:34] <Griatch> MistDude: In the future, do 'killall -9 twistd' to kill all the twistd processes on the system.
+[02:35] <Griatch> You can also do pstree -n | grep twistd to see all processes and kill them all individually by id.
+[02:36] <Griatch> Note that if brute-killing Evennia like this, the server.pid and portal.pid files will most likely still remain in your game/ directory (well not in your case, since you deleted the whole thing, but assuming you didn't). Evennia will then tell you that they are "stale" and need to be deleted.
+[02:37] <Griatch> Programs like htop or just the standard top can also filter by process and htop allows you to kill processes in a more menu-inspired fashion.:
+
+
+The pluggable modules section of src/settings_default.py lists all the pluggable modules Evennia looks for. Most (not all) have templates in game/gamesrc/conf/examples/ and installing them follows the same principle. 
+Database management, including resetting:
+https://github.com/evennia/evennia/wiki/Updating%20Your%20Game
+
+PROC_POOL to handle something that takes a lot of time to execute
+[12:06] <eartsar> https://github.com/evennia/evennia/wiki/Async%20Process
+[12:06] <eartsar> utils.run_async would probably work for anything small, though.
+[12:06] <eartsar> with a callback
+
+
+------DEVELOPMENT STRATEGY NOTES---------------------------------
+Plan: When making stuff for testing...make sure to set it up as a batch file so that it can be reproduced on the other instances!
+
+/md/game/settings.py should not be normally in git tracking. We should only
+make changes to this at the bottom normally, and only when we have to change
+a pointer. Since some references might differ between our two game instances,
+once in a while a change may have to be made. When it does, this is the
+procedure to follow:
+Make a note of what the change should be in the settings.py file and if
+there are other changes elsewhere.
+Temporarily add settings.py to git tracking
+    git add /md/game/settings.py
+Make the changes needed to the file, then commit it:
+    git commit -a
+Push the changes to the appropriate bitbucket branch:
+    git push origin <your working branch name>
+Remove the settings.py file from git tracking, but use --cache option to
+keep it locally:
+    git rm /md/settings.py --cache
+Check if it shows under the 'untracked files' on the git status message:
+    git status
+
+
+
+------GIT CODE MANAGEMENT NOTES----------------------------
+Username on Bitbucket:
+MistDude
+Password on Bitbucket:
+ilikemoneyilikemoney
+
+To create a new branch based off of a different existing branch on your
+local machine:
+git branch <new branch name> <branch to copy from>
+To get to that branch:
+git checkout <branchname>
+
+To delete a branch, first checkout to a different branch then use:
+git branch -D <branch to delete>
+
+To merge changes into a branch from another branch:
+(for example, to update MistDudetteStable with changes from MistDudette)
+First checkout to the MistDudetteStable branch.
+git checkout MistDudetteStable
+Then merge in the changes:
+git merge MistDudette
+Finally, push those changes to the web:
+git push origin MistDudetteStable
+
+
+To pull from a repository branch into a local branch, first make sure you are in
+    the branch you want to be in, then:
+git pull origin <name of remote branch>
+For example, from the MistDudette branch, do:
+git pull origin MistDudeStable
+
+If you ever need to pull just one file from a different branch into the
+branch you are working in currently use:
+   git checkout <branch that has the file you want> <filename>
+
+
+To push a branch onto bitbucket:
+git push origin <remote branch to push to>
+example: git push origin MistDudette
+syntax is:
+   git push origin <branch on the bitbucket repository that you are pushing to>
+
+
+-----CURRENT DEVELOPMENT NOTES---------
+Current work: setting up stuff for handling multiple matches for get and other commands, setting up support for pronouns and additional command strings for 'get', like 'from', 'on', 'in', etc.
+
+Should separate parsing code in general.py for CmdGet into its own module so that we can import it into other commands, as much of the code should be the same.
+
+wanted to run something by you
+bout how thinsg are displayed in room
+ust to check that you are okay with how I am thinking of handling this at the moment
+subjec to change, obv)
+o, as you know I have rooms set up to have a dynamic display for the text based that is object-based
+instead of stagnant text)
+ow it is currently is that location-objects (or sub-locations in a room) will have text displayed after them that show objects_nearby
+In the middle of the market is a large fountain. Next to it is Frito and a pile of rocks."
+or example.
+o here's the new part that I want to run by you
+hat example would be if Frito was near the fountain but the pile of rocks was not near Frito (for example somone else was standing there previously and they had dropped the pile...then left)
+o, to avoid the text becoming too convoluted, I'm thinking that things that are near characters on the ground (so, things they've likely interacted with)
+ill disappear from the room descrip and instead only show up if you look directly at the character
+his might be a bit weird, though, as then a pile you previously saw in the room by the fountain
+ill now be missing from the room descrip
+o maybe...
+nly characters will explicitly appear (and large items) in the room descrip
+ith a general text for objects near a location object being like: "In the middle of the market is a large fountain. Near it is Frito and some things on the ground."
+f you looked at the foutnain you'd see what those items were, and maybe that would be the place that could say what is near which character
+This fountain is gurgling softly. Standing nearby is Frito and Camacho. Near Frito is a pile of rocks and a sword. Near Camacho is a pile of rocks and a box."
+[2/1/2015 1:11:01 PM] Iris Evensen: Looks good so far.
+nd after the character descrips you get by looking at them, their location will also be noted
+Frito is standing near a large fountain. Near him are some rocks and a sword."
+ne thing I am very aware of....
+s that if several people/things are in one same location
+he text that displays them might get repetitive...
+ot so sure how to handle it...cause having a list of 'things in the room' obviously is no better
+nd prefer our method
+ut it still is by no means perfect
+ne idea I have is to have set text-format that varies depending on the number of people/things
+t would be predictable, of course, but would maybe flow a bit better
+rying to come up with a suitable example
+o, if you were to look at the fountain and there were only two people near it
+The fountain gurlges softly. Nearby are Frito and Camacho. On the ground near Frito is a box and a kite, next to Camacho lies a leather bag."
+f there were four people:
+The fountain gurgles softly. Several people are gathered around the fountain. Frito is nearby with a sword lying by his feet. A backpack is on the ground near Camacho. Aragorn and Gandalf are near the fountain."
+he order and flavor text of how the items appear near Frito and Camacho would always be that way if 4 people were there
+y detecthing that no objects are near aragorn and gandalf
+hey get lumped into a sentence together
