@@ -1,4 +1,7 @@
 ------GIT CODE MANAGEMENT NOTES----------------------------
+To initialize the push/pull commands:
+git remote add origin https://MistDude@bitbucket.org/MistDude/md.git
+
 Username on Bitbucket:
 MistDude
 Password on Bitbucket:
