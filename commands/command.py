@@ -7,6 +7,9 @@ Commands describe the input the player can do to the game.
 
 from evennia import Command as BaseCommand
 from evennia import default_cmds
+from evennia import utils
+from evennia.commands.default.building import CmdDestroy as CD
+from commands.menusystem import *
 
 
 class Command(BaseCommand):
