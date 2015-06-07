@@ -13,7 +13,7 @@ unnecessarily.
 
 # Use the defaults from Evennia unless explicitly overridden
 import os
-from evennia.settings_default import *
+from evennia.default_settings import *
 
 ######################################################################
 # Evennia base server config
