@@ -13,6 +13,7 @@ unnecessarily.
 
 # Use the defaults from Evennia unless explicitly overridden
 import os
+import sys
 from evennia.settings_default import *
 
 ######################################################################
@@ -103,6 +104,8 @@ CMDSET_PLAYER = 'commands.cmdset.PlayerCmdSet'
 CMDSET_SESSION = 'commands.cmdset.SessionCmdSet'
 #CMDSET_UNLOGGEDIN = 'game.gamesrc.commands.cmdset.UnloggedinCmdSet'
 CMDSET_UNLOGGEDIN = 'contrib.menu_login.UnloggedInCmdSet'
+
+print 'CMDSET_SESSION ' + str(CMDSET_SESSION)
 
 # The command parser module to use. See the default module for which
 # functions it must implement

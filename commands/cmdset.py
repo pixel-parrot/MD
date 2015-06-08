@@ -155,7 +155,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
 
 	
 
-class SessionCmdSet(CmdSet):
+class SessionCmdSet(default_cmds.SessionCmdSet):
     """
     Sets up the unlogged cmdset.
     Useful for making commands for character creation and things like that.
