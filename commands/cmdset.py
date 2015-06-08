@@ -25,18 +25,19 @@ To add a wholly new command set:
 
 """
 
-from ev import CmdSet, Command
-from ev import default_cmds
-from src.commands.default import player
+#from evennia import CmdSet, Command
+from evennia.commands.cmdset import CmdSet
+from evennia import default_cmds
+from evennia.commands.default import player
 # adding menu driven system test
-from contrib.menusystem import CmdMenuTest
-from game.gamesrc.commands.character_creation import CharacterCreationSystem
+from evennia.contrib.menusystem import CmdMenuTest
+from commands.character_creation import CharacterCreationSystem
 # adding developer commands
-from game.gamesrc.commands.developer_commands import *
+from commands.developer_commands import *
 # adding default commands
-from game.gamesrc.commands.default import *
+from commands.default import *
 # adding new general commands
-from game.gamesrc.commands.sublocation_movement import SublocationMovement
+from commands.sublocation_movement import SublocationMovement
 
 
 #from contrib import menusystem, lineeditor
