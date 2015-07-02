@@ -26,7 +26,7 @@ To add a wholly new command set:
 """
 
 #from evennia import CmdSet, Command
-from evennia.commands.cmdset import CmdSet
+#from evennia.commands.cmdset import CmdSet
 from evennia import default_cmds
 from evennia.commands.default import player
 # adding menu driven system test
