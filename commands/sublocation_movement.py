@@ -2,10 +2,10 @@ from evennia import Command as BaseCommand
 from evennia import default_cmds
 from evennia import utils
 from evennia.commands.default.building import CmdDestroy as CD
-from md.tools.list_tools import ListTools as LT
-from md.tools.text_tools import TextTools as TT
-from md.tools.parsing_tools import ParsingTools as PT
-from md.tools.proximity_tools import ProximityTools as PxT
+from tools.list_tools import ListTools as LT
+from tools.text_tools import TextTools as TT
+from tools.parsing_tools import ParsingTools as PT
+from tools.proximity_tools import ProximityTools as PxT
 
 
 class SublocationMovement(BaseCommand):

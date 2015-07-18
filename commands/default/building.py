@@ -6,14 +6,14 @@ Building and world design commands
 """
 from django.conf import settings
 from django.db.models import Q
-from ev.objects.models import ObjectDB
-from ev.locks.lockhandler import LockException
-from ev.commands.default.muxcommand import MuxCommand
-from ev.commands.cmdhandler import get_and_merge_cmdsets
-from ev.utils import create, utils, search
-from ev.utils.utils import inherits_from
-from ev.utils.spawner import spawn
-from ev.utils.ansi import raw
+from evennia.objects.models import ObjectDB
+from evennia.locks.lockhandler import LockException
+from evennia.commands.default.muxcommand import MuxCommand
+from evennia.commands.cmdhandler import get_and_merge_cmdsets
+from evennia.utils import create, utils, search
+from evennia.utils.utils import inherits_from
+from evennia.utils.spawner import spawn
+from evennia.utils.ansi import raw
 
 # limit symbol import for API
 __all__ = ("ObjManipCommand", "CmdSetObjAlias", "CmdCopy",

@@ -35,7 +35,10 @@ from commands.character_creation import CharacterCreationSystem
 # adding developer commands
 from commands.developer_commands import *
 # adding default commands
-from commands.default import *
+from commands.default.cmdset_character import *
+from commands.default.cmdset_player import *
+from commands.default.cmdset_session import *
+from commands.default.cmdset_unloggedin import *
 # adding new general commands
 from commands.sublocation_movement import SublocationMovement
 
@@ -64,7 +67,7 @@ class ExampleCmdSet(CmdSet):
         self.add(Command())
 
 
-class CharacterCmdSet(default_cmds.CharacterCmdSet):
+class CharacterCmdSet(CharacterCmdSet):
     """
     This is an example of how to overload the default command
     set defined in src/commands/default/cmdset_character.py.
@@ -99,7 +102,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CharacterCreationSystem())
 
 
-class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
+class UnloggedinCmdSet(UnloggedinCmdSet):
     """
     This is an example of how to overload the command set of the
     unloggedin commands, defined in
@@ -124,7 +127,7 @@ class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
         #
 
 
-class PlayerCmdSet(default_cmds.PlayerCmdSet):
+class PlayerCmdSet(PlayerCmdSet):
     """
     This is set is available to the player when they have no
     character connected to them (i.e. they are out-of-character, ooc).
@@ -155,7 +158,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
 
 	
 
-class SessionCmdSet(default_cmds.SessionCmdSet):
+class SessionCmdSet(SessionCmdSet):
     """
     Sets up the unlogged cmdset.
     Useful for making commands for character creation and things like that.

@@ -1,6 +1,6 @@
 # This module holds commands for the character creation system.
 
-from commands.commands import *
+from commands.command import *
 import random as r
 
 class CharacterCreationSystem(Command):

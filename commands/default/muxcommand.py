@@ -4,7 +4,7 @@ is also an Player/OOC version that makes sure caller is a Player object.
 """
 
 from evennia.utils import utils
-from evennia.commands.commands import Command
+from evennia.commands.command import Command
 
 # limit symbol import for API
 __all__ = ("MuxCommand", "MuxPlayerCommand")

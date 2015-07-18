@@ -23,10 +23,10 @@ Example batch-code file: game/gamesrc/commands/examples/batch_code.py
 """
 from traceback import format_exc
 from django.conf import settings
-from ev.utils.batchprocessors import BATCHCMD, BATCHCODE
-from ev.commands.cmdset import CmdSet
-from ev.commands.default.muxcommand import MuxCommand
-from ev.utils import utils
+from evennia.utils.batchprocessors import BATCHCMD, BATCHCODE
+from evennia.commands.cmdset import CmdSet
+from evennia.commands.default.muxcommand import MuxCommand
+from evennia.utils import utils
 
 # limit symbols for API inclusion
 __all__ = ("CmdBatchCommands", "CmdBatchCode")

@@ -37,6 +37,7 @@ this change, you have to convert them manually e.g. with the
 
 """
 from evennia import DefaultPlayer, DefaultGuest
+from commands.cmdset import *
 
 
 class Player(DefaultPlayer):
@@ -108,8 +109,9 @@ class Player(DefaultPlayer):
      at_server_shutdown()
 
     """
-    pass
-
+    
+    def at_player_creation(self):
+        self.cmdset.add(PlayerCmdSet())
 
 class Guest(DefaultGuest):
     """
