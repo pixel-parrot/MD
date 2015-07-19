@@ -37,7 +37,7 @@ this change, you have to convert them manually e.g. with the
 
 """
 from evennia import DefaultPlayer, DefaultGuest
-from commands.cmdset import *
+from commands.default_cmdsets import *
 
 
 class Player(DefaultPlayer):

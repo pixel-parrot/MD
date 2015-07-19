@@ -179,8 +179,8 @@ class ListObjectsNearby(Command):
     syntax:
     nearby <object>
     usage examples:
-    nearby <Frito>
-    nearby <menhir>
+    nearby Frito
+    nearby menhir
     '''
 
     key = 'list nearby'
@@ -197,6 +197,194 @@ class ListObjectsNearby(Command):
             caller.msg('objects nearby: \n' + str([loc.key + ' : ' + loc.dbref for loc in obj.db.objects_nearby]))
 
 
+class Create(Command):
+    '''
+    IN PROGRESS
+    '''
+    '''
+    This is the tool used from inside the MUD to create any object desired. This command is menu
+     based. When using the command you are prompted to specify various required or optional
+     properties on an object. Details on valid input at each prompt should be included when
+     updating this command. The prompts on this command should be based on the same properties
+     specified for the 'at_creation' type methods of any object. Any new non-temporary
+     properties of an object should be explicity specified in that object's main file, as well
+     as added to this command. Some properties like the basic tag for an object will be done
+     automatically, but there can be optional prompts to add additional tags, for example.
+     
+    This command takes no arguments.
+    
+    Usage:
+        create
+    '''
 
+    key = 'create'
+    locks = 'cmd:perm(Wizards)'
+    help_category = 'development'
+
+    # path choice node
+    def makePathNode(self):
+        node = MenuNode('START',
+                         text = 'Object type:',
+                         links = ['END', 'END', 'END'],
+                         keywords = ['Object', 'NPC', 'Room'],
+                         callback = lambda self: Create.gotoChosenPath(Create(), self.caller, self.caller.db.menuvar))
+        return node
+
+    # path choice
+    def gotoChosenPath(self, player, choice):
+        # choice references self.caller.db.menuvar in the main logic at the bottom
+        if choice == 'Object':
+            pass
+        
+        if choice == 'NPC':
+            pass
+
+        if choice == 'Room':
+            player.db.next_node = 'roomNodeMain'
+
+    def makeObjectNodeMain(self, next_node, choice):
+        pass
+
+    def makeNPCNodeMain(self, next_node, choice):
+        pass
+
+    def makeRoomNodeMain(self, next_node, choice):
+        if next_node == 'roomNodeMain':
+            key = 'START'
+        else:
+            key = 'INACTIVE'
+
+        text = 'Room type:'
+        links = ['END','END']
+        linktexts = [' ', ' ']
+        keywords = ['Outdoor', 'Indoor']
+
+        set_links = []
+        set_linktexts = []
+        set_keywords = []
+
+        set_links.extend(links[0:3])
+        set_linktexts.extend(linktexts[0:3])
+        set_keywords.extend(keywords[0:3])
+        
+        node = MenuNode(key, 
+                        text = text,
+                        links = set_links,
+                        linktexts = set_linktexts,
+                        keywords = set_keywords,
+                        callback = lambda self: Create.gotoChosenRoomType(Create(), self.caller, self.caller.db.menuvar)) 
+        return node
+
+    def gotoChosenRoomType(self, player, choice):
+        if choice == 'Outdoor':
+            player.db.next_node = 'roomNodeOutdoorMain'
+
+        if choice == 'Indoor':
+            player.db.next_node = 'roomNodeIndoorMain'
+
+    def makeRoomNodeOutdoorMain(self, next_node, choice):
+        if next_node == 'roomNodeOutdoorMain':
+            key = 'START'
+        else:
+            key = 'INACTIVE'
+
+        text = 'Outdoor Room Type:'
+        links = ['END', 'END', 'END', 'END']
+        linktexts = ['For example, plains or flats.', 'For example, an old-growth forest.', 'For example, a thick forest.', 'For example, a canyon.']
+        keywords = ['Open', 'Canopy', 'Thicket', 'Walled']
+
+        set_links = []
+        set_linktexts = []
+        set_keywords = []
+
+        set_links.extend(links[0:5])
+        set_linktexts.extend(linktexts[0:5])
+        set_keywords.extend(keywords[0:5])
+
+        node = MenuNode(key, 
+                        text = text,
+                        links = set_links,
+                        linktexts = set_linktexts,
+                        keywords = set_keywords,
+                        callback = lambda self: Create.gotoChosenOutdoorType(Create(), self.caller, self.caller.db.menuvar)) 
+        return node
+
+    def gotoChosenOutdoorType(self, player, choice):
+        if choice == 'Open':
+            player.db.next_node = 'roomNodeOutdoorOpen'
+        if choice == 'Canopy':
+            player.db.next_node = 'roomNodeOutdoorCanopy'
+        if choice == 'Thicket':
+            player.db.next_node = 'roomNodeOutdoorThicket'
+        if choice == 'Walled':
+            player.db.next_node = 'roomNodeOutdoorWalled'
+
+    def makeRoomNodeOutdoorOpen(self, next_node, choice):
+        if next_node == 'roomNodeOutdoorOpen':
+            key = 'START'
+        else:
+            key = 'INACTIVE'
+
+        text = 'Select "Continue" to enter the room key:'
+        links = ['END']
+        linktexts = ['Enter the room key next.']
+        keywords = ['Continue']
+
+        set_links = []
+        set_linktexts = []
+        set_keywords = []
+
+        set_links.extend(links[0:1])
+        set_linktexts.extend(linktexts[0:1])
+        set_keywords.extend(keywords[0:1])
+
+        node = MenuNode(key,
+                        text = text,
+                        links = set_links,
+                        linktexts = set_linktexts,
+                        keywords = set_keywords,
+                        callback = lambda self: Create.editOutdoorOpenRoomAlias(Create(), self.caller)) 
+        return node
+
+    def gotoEditOutdoorOpenRoomAlias(self, player, choice):
+        player.db.next_node = 'roomNodeOutdoorAliasEntry'
+        '''IN PROGRESS'''
+        # DELETE THIS BELOW ONE LINE
+        player.db.next_node = 'exitNode'
+        player.db.outdoor_room_key = raw_input()
+
+    
+    def makeExitNode(self, next_node, choice):
+        if next_node == 'exitNode':
+            key = 'START'
+        else:
+            key = 'INACTIVE'
+        
+        node = MenuNode(key,
+                        text = "All done!",
+                        links = ['END'],
+                        keywords = ['Exit'],
+                        callback = lambda self: Create.exitNode(Create(), self.caller))
+
+        return node
+
+    def exitNode(self, player):
+        player.db.next_node = 'DONE'
+
+    def func(self):
+        'Object Creation System'
+
+        if not self.args:
+            startNode = self.makePathNode()
+            roomNodeMain = self.makeRoomNodeMain(self.caller.db.next_node, self.caller.db.menuvar)
+            roomNodeOutdoorMain = self.makeRoomNodeOutdoorMain(self.caller.db.next_node, self.caller.db.menuvar)
+            roomNodeOutdoorOpen = self.makeRoomNodeOutdoorOpen(self.caller.db.next_node, self.caller.db.menuvar)
+            exitNode = self.makeExitNode(self.caller.db.next_node, self.caller.db.menuvar)
+
+            if self.caller.db.next_node <> 'exitNode':
+                menu = MenuTree(self.caller, nodes = (startNode, roomNodeMain, roomNodeOutdoorMain, roomNodeOutdoorOpen, exitNode), exec_end = "create")
+            else:
+                menu = MenuTree(self.caller, nodes = (startNode, roomNodeMain, roomNodeOutdoorMain, roomNodeOutdoorOpen, exitNode))
+                                                      
 
 

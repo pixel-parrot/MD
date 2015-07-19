@@ -93,6 +93,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(ListObjectsByName())
         self.add(ListObjectsNearby())
         self.add(TempCmd())
+        self.add(Create())
 
         # commands generally available 
         self.add(CmdMenuTest())

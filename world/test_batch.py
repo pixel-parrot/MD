@@ -9,7 +9,7 @@ First you will have to uncomment the Nexus creation code below, then run
 @batchcode test_batch
 within the game so that everything is set up correctly.
 Next you can delete the 'limbo' area if you want to.
-Finally you'll have to edit your /md/game/settings.py file to change the
+Finally you'll have to edit your /md/server/conf/settings.py file to change the
 default home locations to whatever the dbref for Nexus is on your instance
 of the game.
 DEFAULT_HOME = '#<dbref>'
@@ -33,7 +33,7 @@ from typeclasses import exits
 from typeclasses import object_template
 from typeclasses import stackable_object
 from typeclasses import stationary_object
-import commands.cmdset 
+import commands.default_cmdsets 
 
 
 #CODE (create testing rooms) arena
