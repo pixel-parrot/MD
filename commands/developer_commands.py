@@ -218,21 +218,54 @@ class Create(Command):
     '''
 
     key = 'create'
+    aliases = ['cre']
     locks = 'cmd:perm(Wizards)'
     help_category = 'development'
 
     # path choice node
+#    def makePathNode(self):
+#        self.caller.msg('in makePathNode')
+#        node = MenuNode('START',
+#                         text = 'Object type:',
+#                         links = ['END', 'END', 'END'],
+#                         keywords = ['Object', 'NPC', 'Room'],
+#                         callback = lambda self: Create.gotoChosenPath(Create(), self.caller, self.caller.db.menuvar))
+#        return node
+
+    # path choice node
     def makePathNode(self):
-        node = MenuNode('START',
+        self.caller.msg('in makePathNode')
+        node = MenuNode(key = 'START',
                          text = 'Object type:',
                          links = ['END', 'END', 'END'],
                          keywords = ['Object', 'NPC', 'Room'],
-                         callback = lambda self: Create.gotoChosenPath(Create(), self.caller, self.caller.db.menuvar))
+                         callback = lambda self: Create.setChosenPath(Create(), self.caller))
+        return node
+
+    # setting initial path choice
+    def setChosenPath(self, player):
+        player.msg('in setChosenPath')
+        player.db.next_node = 'setVariableNode'
+
+    def makeSetVariableNode(self, next_node, choice):
+        self.caller.msg('in makeSetVariableNode')
+        self.caller.db.previous_choice = choice
+        if next_node == 'setVariableNode':
+            key = 'START'
+        else:
+            key = 'INACTIVE'
+        node = MenuNode(key,
+                         text = 'Reticulating Splines...',
+                         links = ['END'],
+                         linktexts = [' to Continue'],
+                         keywords = ['1'],
+                         callback = lambda self: Create.gotoChosenPath(Create(), self.caller, self.caller.db.previous_choice))
         return node
 
     # path choice
     def gotoChosenPath(self, player, choice):
         # choice references self.caller.db.menuvar in the main logic at the bottom
+        self.caller.msg('in gotoChosenPath')
         if choice == 'Object':
             pass
         
@@ -248,7 +281,7 @@ class Create(Command):
     def makeNPCNodeMain(self, next_node, choice):
         pass
 
-    def makeRoomNodeMain(self, next_node, choice):
+    def makeRoomNodeMain(self, next_node):
         if next_node == 'roomNodeMain':
             key = 'START'
         else:
@@ -272,7 +305,26 @@ class Create(Command):
                         links = set_links,
                         linktexts = set_linktexts,
                         keywords = set_keywords,
-                        callback = lambda self: Create.gotoChosenRoomType(Create(), self.caller, self.caller.db.menuvar)) 
+                        callback = lambda self: Create.setChosenRoomType(Create(), self.caller)) 
+        return node
+
+    def setChosenRoomType(self, player):
+        player.msg('in setChosenRoomType')
+        player.db.next_node = 'setVariableNode2'
+
+    def makeSetVariableNode2(self, next_node, choice):
+        self.caller.msg('in makeSetVariableNode')
+        self.caller.db.previous_choice = choice
+        if next_node == 'setVariableNode2':
+            key = 'START'
+        else:
+            key = 'INACTIVE'
+        node = MenuNode('START',
+                         text = 'Reticulating Splines...',
+                         links = ['END'],
+                         linktexts = [' to Continue'],
+                         keywords = ['1'],
+                         callback = lambda self: Create.gotoChosenRoomType(Create(), self.caller, self.caller.db.previous_choice))
         return node
 
     def gotoChosenRoomType(self, player, choice):
@@ -282,7 +334,7 @@ class Create(Command):
         if choice == 'Indoor':
             player.db.next_node = 'roomNodeIndoorMain'
 
-    def makeRoomNodeOutdoorMain(self, next_node, choice):
+    def makeRoomNodeOutdoorMain(self, next_node):
         if next_node == 'roomNodeOutdoorMain':
             key = 'START'
         else:
@@ -306,7 +358,26 @@ class Create(Command):
                         links = set_links,
                         linktexts = set_linktexts,
                         keywords = set_keywords,
-                        callback = lambda self: Create.gotoChosenOutdoorType(Create(), self.caller, self.caller.db.menuvar)) 
+                        callback = lambda self: Create.setChosenOutdoorType(Create(), self.caller)) 
+        return node
+
+    def setChosenOutdoorType(self, player):
+        player.msg('in setOutdoorRoomType')
+        player.db.next_node = 'setVariableNode3'
+
+    def makeSetVariableNode3(self, next_node, choice):
+        self.caller.msg('in makeSetVariableNode')
+        self.caller.db.previous_choice = choice
+        if next_node == 'setVariableNode3':
+            key = 'START'
+        else:
+            key = 'INACTIVE'
+        node = MenuNode('START',
+                         text = 'Reticulating Splines...',
+                         links = ['END'],
+                         linktexts = [' to Continue'],
+                         keywords = ['1'],
+                         callback = lambda self: Create.gotoChosenOutdoorType(Create(), self.caller, self.caller.db.previous_choice))
         return node
 
     def gotoChosenOutdoorType(self, player, choice):
@@ -319,7 +390,7 @@ class Create(Command):
         if choice == 'Walled':
             player.db.next_node = 'roomNodeOutdoorWalled'
 
-    def makeRoomNodeOutdoorOpen(self, next_node, choice):
+    def makeRoomNodeOutdoorOpen(self, next_node):
         if next_node == 'roomNodeOutdoorOpen':
             key = 'START'
         else:
@@ -373,18 +444,29 @@ class Create(Command):
 
     def func(self):
         'Object Creation System'
+        
+        self.caller.msg('in func')
 
         if not self.args:
+            self.caller.msg('in nonargs')
             startNode = self.makePathNode()
-            roomNodeMain = self.makeRoomNodeMain(self.caller.db.next_node, self.caller.db.menuvar)
-            roomNodeOutdoorMain = self.makeRoomNodeOutdoorMain(self.caller.db.next_node, self.caller.db.menuvar)
-            roomNodeOutdoorOpen = self.makeRoomNodeOutdoorOpen(self.caller.db.next_node, self.caller.db.menuvar)
+            setVar1 = self.makeSetVariableNode(self.caller.db.next_node, self.caller.db.menuvar)
+            roomNodeMain = self.makeRoomNodeMain(self.caller.db.next_node)
+            setVar2 = self.makeSetVariableNode2(self.caller.db.next_node, self.caller.db.menuvar)
+            roomNodeOutdoorMain = self.makeRoomNodeOutdoorMain(self.caller.db.next_node)
+            setVar3 = self.makeSetVariableNode3(self.caller.db.next_node, self.caller.db.menuvar)
+            roomNodeOutdoorOpen = self.makeRoomNodeOutdoorOpen(self.caller.db.next_node)
             exitNode = self.makeExitNode(self.caller.db.next_node, self.caller.db.menuvar)
 
             if self.caller.db.next_node <> 'exitNode':
-                menu = MenuTree(self.caller, nodes = (startNode, roomNodeMain, roomNodeOutdoorMain, roomNodeOutdoorOpen, exitNode), exec_end = "create")
+                self.caller.msg('in not exitNode')
+                menu = MenuTree(self.caller, nodes = (startNode, setVar1, roomNodeMain, setVar2, roomNodeOutdoorMain, setVar3, roomNodeOutdoorOpen, exitNode), exec_end = "cre")
             else:
-                menu = MenuTree(self.caller, nodes = (startNode, roomNodeMain, roomNodeOutdoorMain, roomNodeOutdoorOpen, exitNode))
+                self.caller.msg('in else')
+                menu = MenuTree(self.caller, nodes = (startNode, setVar1, roomNodeMain, setVar2, roomNodeOutdoorMain, setVar3, roomNodeOutdoorOpen, exitNode))
+
+            self.caller.msg('pre menu start')
+            menu.start()
                                                       
 
 

@@ -200,6 +200,7 @@ class MenuTree(object):
             del self.caller.db._menu_data
             if self.caller.db.menuvar == 'Exit':
                 self.caller.attributes.remove("menuvar")
+                self.caller.attributes.remove("previous_choice")
                 self.caller.attributes.remove("next_node")
             if self.exec_end is not None:
                 self.caller.execute_cmd(self.exec_end)
