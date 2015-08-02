@@ -80,7 +80,7 @@ class SublocationMovement(BaseCommand):
         #self.caller.msg("args: " + self.args)
 
         # getting the prepositions used, object strings and adjective strings
-        successful, num1, adj1, obj1, prep1, adj2, obj2, prep2, adj3, obj3 = PT.parser(PT(), caller, self.cmdstring, self.args)
+        successful, num1, adj1, obj1, prep1, adj2, obj2, prep2, adj3, obj3, prep3, adj4, obj4 = PT.parser(PT(), caller, self.cmdstring, self.args)
         # if parsing was not successful, don't continue
         if not successful:
             #caller.msg('successful: ' + str(successful))
@@ -99,9 +99,10 @@ class SublocationMovement(BaseCommand):
         object1_list = [obj for obj in caller.location.contents if obj1 == obj.key or obj1 in obj.aliases.all()]
         object2_list = [obj for obj in caller.location.contents if obj2 == obj.key or obj2 in obj.aliases.all()]
         object3_list = [obj for obj in caller.location.contents if obj3 == obj.key or obj3 in obj.aliases.all()]
+        object4_list = [obj for obj in caller.location.contents if obj4 == obj.key or obj4 in obj.aliases.all()]
 
         # getting potential targets based on proximity
-        successful, target_potential, obj2_potential, obj3_potential = PxT.returnAdjacentTargets(PxT(), caller, self.cmdstring, adj1, obj1, object1_list, adj2, obj2, object2_list, adj3, obj3, object3_list)
+        successful, target_potential, obj2_potential, obj3_potential, obj4_potential = PxT.returnAdjacentTargets(PxT(), caller, self.cmdstring, adj1, obj1, object1_list, adj2, obj2, object2_list, adj3, obj3, object3_list, adj4, obj4, object4_list)
         # if there was a proximity error, don't continue
         if not successful:
             return
@@ -147,11 +148,13 @@ class SublocationMovement(BaseCommand):
         target.db.objects_nearby = LT.dedupeList(LT(), target.db.objects_nearby)
         ######## also update the closest location_object that the target is near to now
         ########    also have the mover
-        if 'character' in caller.tags.all():
-            target.db.location_objects_nearby[0].db.location_objects_nearby.append(caller)
-        target.db.location_objects_nearby[0].db.objects_nearby.append(caller)
-        target.db.location_objects_nearby[0].db.location_objects_nearby = LT.dedupeList(LT(), target.db.location_objects_nearby[0].db.location_objects_nearby)
-        target.db.location_objects_nearby[0].db.objects_nearby = LT.dedupeList(LT(), target.db.location_objects_nearby[0].db.objects_nearby)
+        '''MAYBE FIX OR REMOVE THIS IF CONDITION BELOW...ARE ROOMS SUPPOSED TO BE HERE AUTO? OR IS IT JUST OBJ_NEAR?'''
+        if target.db.location_objects_nearby:
+            if 'character' in caller.tags.all():
+                target.db.location_objects_nearby[0].db.location_objects_nearby.append(caller)
+            target.db.location_objects_nearby[0].db.objects_nearby.append(caller)
+            target.db.location_objects_nearby[0].db.location_objects_nearby = LT.dedupeList(LT(), target.db.location_objects_nearby[0].db.location_objects_nearby)
+            target.db.location_objects_nearby[0].db.objects_nearby = LT.dedupeList(LT(), target.db.location_objects_nearby[0].db.objects_nearby)
         ##### update the target2's objects_nearby and location_objects_nearby as needed
         if target2:
             if 'character' in caller.tags.all():

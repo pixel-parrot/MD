@@ -109,39 +109,6 @@ class Character(DefaultCharacter):
         return True
 
 
-    def move_to(self, destination, quiet=False,
-                emit_to_obj=None, use_destination=True, to_none=False):
-        """
-        Moves this object to a new location. Note that if <destination> is an
-        exit object (i.e. it has "destination"!=None), the move_to will
-        happen to this destination and -not- into the exit object itself,
-        unless use_destination=False. Note that no lock checks are done by
-        this function, such things are assumed to have been handled before
-        calling move_to.
-
-        destination: (Object) Reference to the object to move to. This
-                     can also be an exit object, in which case the destination
-                     property is used as destination.
-        quiet:  (bool)    If true, don't emit left/arrived messages.
-        emit_to_obj: (Object) object to receive error messages
-        use_destination (bool): Default is for objects to use the "destination"
-                              property of destinations as the target to move to.
-                              Turning off this keyword allows objects to move
-                              "inside" exit objects.
-        to_none - allow destination to be None. Note that no hooks are run
-                  when moving to a None location. If you want to run hooks, run
-                  them manually (and make sure the hooks can handle a None
-                  location).
-        Returns True/False depending on if there were problems with the move.
-               This method may also return various error messages to the
-               emit_to_obj.
-
-        """
-        return self.dbobj.move_to(destination, quiet=False,
-                                  emit_to_obj=emit_to_obj,
-                                  use_destination=use_destination)
-
-
     def announce_move_from(self, destination):
         """
         Called if the move is to be announced. This is

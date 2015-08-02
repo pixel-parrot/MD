@@ -1,13 +1,13 @@
 # Stackable object related stuff. 
 
 #from game.gamesrc.objects.object import * 
-from objects.object_template import * 
+from typeclasses.object_template import * 
 from tools.text_tools import TextTools
 from tools.list_tools import ListTools as LT
 #from evennia import Object as DefaultObject
 from evennia import DefaultObject
 from evennia.utils import search
-import commands.cmdset
+import commands.default_cmdsets
 import evennia.commands.cmdset
 from evennia import create_object
 import random as r

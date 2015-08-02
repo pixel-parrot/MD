@@ -5,7 +5,7 @@ Template for Stationary Objects
 """
 from evennia import DefaultObject
 from evennia.utils import search
-import commands.cmdset
+import commands.default_cmdsets
 import evennia.commands.cmdset
 from evennia import create_object
 

@@ -78,7 +78,7 @@ class ParsingTools:
         prepositions = TT.prepositionList(TT())
         preps = '|'.join(prepositions)
         raw_list = [string.strip() for string in re.split('\\s?(\d*)[\\s?(.*?)]\\s?('+preps+')?\\s?(.*?)\\s?('+preps+')?\\s?(.*?)\\s?('+preps+')?\\s?(.*?)', args) if string]
-        #caller.msg('raw_list: ' + str(raw_list))
+        caller.msg('raw_list: ' + str(raw_list))
 
         # extracting numeric argument if any:
         if raw_list[0].isdigit():
