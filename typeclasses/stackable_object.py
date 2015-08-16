@@ -99,6 +99,7 @@ class StackableObject(DefaultObject):
 
 
     def at_before_move(self, destination):
+        self.caller.msg('in at_before_move')
         # we only want to do the next operations if the object is not a stack,
         #  if the destination of the object is not a stack, and if there
         #  are no stack-objects of the same kind in the object's destination 

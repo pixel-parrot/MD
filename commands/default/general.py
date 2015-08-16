@@ -390,7 +390,8 @@ class CmdGet(MuxCommand):
                 caller.msg("You cannot get anything --" + prep3 + "-- the " + obj4_potential[0].key + ".")
                 return
             
-        return
+        ''' This is here for testing purposes '''
+        #return
                 
         ''' IN PROGRESS : changing to using the parsing_tools parser, current progress '''
 
@@ -402,7 +403,8 @@ class CmdGet(MuxCommand):
         #   auto-move them to that location (not an actual move, but an emote will happen and their objects_nearby
         #   property will be updated)
         '''
-        if not locations_string_list:
+#        if not locations_string_list:
+        if not obj2_potential and not obj3_potential and not obj4_potential:
             obj_list = []
 
             #### detect if we are trying to get an item that is in a stack

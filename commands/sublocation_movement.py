@@ -106,9 +106,10 @@ class SublocationMovement(BaseCommand):
         # if there was a proximity error, don't continue
         if not successful:
             return
-        
+                
         # remove any references to the mover from any location_objects_nearby and objects_nearby
         for obj in caller.db.location_objects_nearby:
+            caller.msg('location_objs_nearby: ' + str(obj.key))
             if obj.db.location_objects_nearby:
                 if caller in obj.db.location_objects_nearby:
                     obj.db.location_objects_nearby.remove(caller)

@@ -118,7 +118,7 @@ class ProximityTools:
         if object1_list and not object2_list and not object3_list:
             # identify object1 
             target_potential = object1_list
-            #caller.msg('target_potential: ' + str([obj.dbref for obj in target_potential]))
+            caller.msg('target_potential: ' + str([obj.dbref for obj in target_potential]))
 
         # catch bad attempts where there are no potential matches at this point
 #        if not target_potential and object1_list:
@@ -134,9 +134,12 @@ class ProximityTools:
 #            successful = False
 #            return successful, target_potential, obj2_potential, obj3_potential
 
+        m = 0
+        caller.msg('mark 1')
         # identify potential objects by adjective string match
         adj_dic = {}
         if object1_adjective: 
+            caller.msg('mark 2')
             for obj in target_potential:
                 adj_lst = []
                 for word_list in obj.db.adjective_list:
@@ -151,6 +154,7 @@ class ProximityTools:
                     return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
         adj_dic = {}
         if object2_adjective: 
+            caller.msg('mark 3')
             for obj in obj2_potential:
                 adj_lst = []
                 for word_list in obj.db.adjective_list:
@@ -165,6 +169,7 @@ class ProximityTools:
                     return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
         adj_dic = {}
         if object3_adjective: 
+            caller.msg('mark 4')
             for obj in obj3_potential:
                 adj_lst = []
                 for word_list in obj.db.adjective_list:
@@ -179,6 +184,7 @@ class ProximityTools:
                     return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
         adj_dic = {}
         if object4_adjective: 
+            caller.msg('mark 5')
             for obj in obj4_potential:
                 adj_lst = []
                 for word_list in obj.db.adjective_list:
@@ -196,6 +202,7 @@ class ProximityTools:
         #   having objects have specific identifiers when there are more than one in a room, like
         #   'east table', or by having unique descriptors like 'black table', and so on
         if object4_string and len(obj4_potential) > 1:
+            caller.msg('mark 5')
             caller.msg('Which %s?' %(object4_string))
             successful = False
             return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
@@ -203,6 +210,7 @@ class ProximityTools:
         #   having objects have specific identifiers when there are more than one in a room, like
         #   'east table', or by having unique descriptors like 'black table', and so on
         if object3_string and len(obj3_potential) > 1:
+            caller.msg('mark 6')
             caller.msg('Which %s?' %(object3_string))
             successful = False
             return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
@@ -210,6 +218,7 @@ class ProximityTools:
         #   having objects have specific identifiers when there are more than one in a room, like
         #   'east table', or by having unique descriptors like 'black table', and so on
         if object2_string and len(obj2_potential) > 1:
+            caller.msg('mark 7')
             caller.msg('Which %s?' %(object2_string))
             successful = False
             return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
@@ -217,6 +226,7 @@ class ProximityTools:
         #   having objects have specific identifiers when there are more than one in a room, like
         #   'east table', or by having unique descriptors like 'black table', and so on
         if len(target_potential) > 1:
+            caller.msg('mark 8')
             caller.msg(cmdstring.capitalize() + ' which %s?' %(object1_string))
             successful = False
             return successful, target_potential, obj2_potential, obj3_potential, obj4_potential

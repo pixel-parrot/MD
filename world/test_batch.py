@@ -168,6 +168,7 @@ market = search_object('The Market')[0]
 market.tags.add('room')
 pillory1 = create_object(stationary_object.StationaryObject, key = 'pillory', aliases = ['stocks'], location = market, home = market)
 pillory1.db.object_title = 'a rough wooden restraint'
+pillory1.db.adjective_string = 'rough'
 pillory1.db.description = "Two broad oaken boards hinged horizontally and fastened to a thick, waist-high center post stand here. Each board has three mirrored semicurcular cuts, one large in the center and one smaller on each side which, when closed and locked, form the holes that secure an unfortunate offender's neck and wrists in a considerably unaccomodaing fashion."
 pillory1.db.adjective_list.extend(['rough'])
 pillory1.db.in_room_location = 'north'
@@ -184,8 +185,9 @@ menhir.db.valid_prepositions = ['near', 'next to', 'beside', 'by']
 menhir = search_object('menhir')[0]
 pillory2 = create_object(stationary_object.StationaryObject, key = 'pillory', aliases = ['stocks'], location = market, home = market)
 pillory2.db.object_title = 'a crude wooden restraint'
+pillory2.db.adjective_string = 'crude'
 pillory2.db.description = "Two broad oaken boards hinged horizontally and fastened to a thick, waist-high center post stand here. Each board has three mirrored semicurcular cuts, one large in the center and one smaller on each side which, when closed and locked, form the holes that secure an unfortunate offender's neck and wrists in a considerably unaccomodaing fashion."
-pillory2.db.adjective_list.extend([crude, wooden])
+pillory2.db.adjective_list.extend(['crude', 'wooden'])
 pillory2.db.in_room_location = 'south'
 pillory2.db.in_room_description_default = ''
 pillory2.db.valid_prepositions = ['on', 'under', 'near', 'next to', 'on top of', 'beside', 'by']
@@ -217,32 +219,39 @@ pogostick5.db.description = "a unique pogo stick with a soul of its own"
 
 rock = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock.db.object_title = 'a fucking rock, m8'
+rock.db.adjective_list.extend(['big','red'])
 rock.db.description = "wtf do you expect, it's a goddamn rock you witty little cunt"
-rock.db.location_objects_nearby.extend([rock.location, pillory2])
+rock.db.location_objects_nearby.extend([rock.location, pillory2, caller])
 
 rock2 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock2.db.object_title = 'just another rock, surprised?'
+rock2.db.adjective_list.extend(['large','blue'])
 rock2.db.description = "we're all lookin' for answers, bud. ain't finding none here either."
-rock2.db.location_objects_nearby.extend([rock2.location, pillory2])
+rock2.db.location_objects_nearby.extend([rock2.location, pillory2, caller])
 
 rock3 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock3.db.object_title = 'rockier than ever'
+rock3.db.adjective_list.extend(['rotund','green'])
 rock3.db.description = "rock you like a hurricane"
-rock3.db.location_objects_nearby.extend([rock3.location, pillory2])
+rock3.db.location_objects_nearby.extend([rock3.location, pillory2, caller])
 
 rock4 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock4.db.object_title = 'such rock'
+rock4.db.adjective_list.extend(['tiny','orange'])
 rock4.db.description = "wow"
-rock4.db.location_objects_nearby.extend([rock4.location, pillory2])
+rock4.db.location_objects_nearby.extend([rock4.location, pillory2, caller])
 
 rock5 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock5.db.object_title = 'this rock is special'
+rock5.db.adjective_list.extend(['small','grey'])
 rock5.db.description = "a unique rock with a soul of its own"
-rock5.db.location_objects_nearby.extend([rock5.location, pillory2])
+rock5.db.location_objects_nearby.extend([rock5.location, pillory2, caller])
 
 pillory2.db.objects_nearby.extend([rock, rock2, rock3, rock4, rock5])
 
 caller.msg("Objects created: %s, %s, %s, %s, %s, " % (rock.key, rock2.key, rock3.key, rock4.key, rock5.key))
+caller.db.objects_nearby = [caller.location, rock, rock2, rock3, rock4, rock5]
+caller.db.location_objects_nearby = [pillory2]
 
 #caller.msg("Dbrefs created: %s, %s" % (pogostick.dbref, rock5.dbref))
 
