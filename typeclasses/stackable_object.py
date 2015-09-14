@@ -99,15 +99,21 @@ class StackableObject(DefaultObject):
 
 
     def at_before_move(self, destination):
-        self.caller.msg('in at_before_move')
+        print 'in at_before_move'
+        print 'self: ' + self.key + ' : ' + self.dbref
+        print 'destination: ' + destination.key + ' : ' + destination.dbref
         # we only want to do the next operations if the object is not a stack,
         #  if the destination of the object is not a stack, and if there
         #  are no stack-objects of the same kind in the object's destination 
         if not self.key.endswith('_stack') and not destination.key.endswith('_stack') and not [stack for stack in destination.contents if stack.key.endswith('_stack') and self.key in stack.key]:
+            print 'at_before_move mark 1'
             # do the next lines if there are matching stackable objects in the destination
             if [thing for thing in destination.contents if thing.key == self.key and 'stackable' in thing.tags.all() and self.db.objects_interacting_with[0].db.location_objects_nearby[0] == thing.db.location_objects_nearby[0]]:
+                print 'at_before_move mark 2'
                 if search.search_object_tag('void')[0].contents:
+                    print 'at_before_move mark 3'
                     if not [old for old in search.search_object_tag(self.key + '_stack') if old in search.search_object_tag('void')[0].contents]:
+                        print 'at_before_move mark 4'
                         # creating stack-object
                         create_object(self.typeclass, key = self.key + '_stack', location = destination, home = destination)
                     else:
@@ -132,6 +138,7 @@ class StackableObject(DefaultObject):
                             old_container.db.objects_interacting_with.append(self.location)
                         old_container.move_to(destination,quiet=True)
                 else:
+                    print 'at_before_move mark ending else statement'
                     # creating stack-object
                     create_object(self.typeclass, key = self.key + '_stack', location = destination, home = destination)
 

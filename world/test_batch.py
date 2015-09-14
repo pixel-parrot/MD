@@ -222,30 +222,35 @@ rock.db.object_title = 'a fucking rock, m8'
 rock.db.adjective_list.extend(['big','red'])
 rock.db.description = "wtf do you expect, it's a goddamn rock you witty little cunt"
 rock.db.location_objects_nearby.extend([rock.location, pillory2, caller])
+rock.db.objects_nearby.append(rock.location)
 
 rock2 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock2.db.object_title = 'just another rock, surprised?'
 rock2.db.adjective_list.extend(['large','blue'])
 rock2.db.description = "we're all lookin' for answers, bud. ain't finding none here either."
 rock2.db.location_objects_nearby.extend([rock2.location, pillory2, caller])
+rock2.db.objects_nearby.append(rock2.location)
 
 rock3 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock3.db.object_title = 'rockier than ever'
 rock3.db.adjective_list.extend(['rotund','green'])
 rock3.db.description = "rock you like a hurricane"
 rock3.db.location_objects_nearby.extend([rock3.location, pillory2, caller])
+rock3.db.objects_nearby.append(rock3.location)
 
 rock4 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock4.db.object_title = 'such rock'
 rock4.db.adjective_list.extend(['tiny','orange'])
 rock4.db.description = "wow"
 rock4.db.location_objects_nearby.extend([rock4.location, pillory2, caller])
+rock4.db.objects_nearby.append(rock4.location)
 
 rock5 = create_object(stackable_object.StackableObject, key = 'rock', location = market, home = nexus)
 rock5.db.object_title = 'this rock is special'
 rock5.db.adjective_list.extend(['small','grey'])
 rock5.db.description = "a unique rock with a soul of its own"
 rock5.db.location_objects_nearby.extend([rock5.location, pillory2, caller])
+rock5.db.objects_nearby.append(rock5.location)
 
 pillory2.db.objects_nearby.extend([rock, rock2, rock3, rock4, rock5])
 
@@ -259,7 +264,7 @@ caller.db.location_objects_nearby = [pillory2]
 #   this lets you use the 'dbat' command in the game to quickly delete the last objects you
 #   created in this file. Keep this block at the very end of the file. fbat is the first
 #   object created in the batch file and lbat is the last object created in the batch file.
-#caller.db.fbat = pogostick.dbref
-#caller.db.lbat = rock5.dbref
+caller.db.fbat = pillory1.dbref
+caller.db.lbat = rock5.dbref
 caller.cmdset.add('default_cmdsets.PlayerCmdSet')
 

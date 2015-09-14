@@ -273,7 +273,7 @@ class ProximityTools:
             caller.msg('%s is not near %s.' %(obj1_string, obj2_string))
             successful = False
             return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
-
+        
         return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
 
 

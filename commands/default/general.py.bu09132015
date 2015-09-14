@@ -402,27 +402,22 @@ class CmdGet(MuxCommand):
         #   immediate vicinity of the character. If there is none within the character's objects_nearby
         #   property, but there are ones in the room, they have to specify which one. Eventually this will
         #   auto-move them to that location (not an actual move, but an emote will happen and their objects_nearby
-        #   property will be updated) but they will have to try to get the item again. The idea being that first you
-        #   approach the object, then you get it. This way if someone already has a pile of rocks by them, and it's
-        #   the only source of rocks in the room, you can't just accidentally or purposely swipe their rock in one
-        #   go... you first have to approach the spot (getting an indication to the the players that 'you approach
-        #   the rock pile where Frito is standing'), then you can get the rocks.
+        #   property will be updated)
         '''
-        caller.msg('get command current progress start')
-        caller.msg('target_potential: ' + str(target_potential))
+#        if not locations_string_list:
         if not obj2_potential and not obj3_potential and not obj4_potential:
             obj_list = []
+
+            #### detect if we are trying to get an item that is in a stack
+            #inside_stack_flag = caller.search(target_potential[0].key + '_stack',location=caller.location,exact=True,quiet=True)
+            #inside_stack_flag = caller.search(target_potential[0].key + '_stack',location=caller.db.location_objects_nearby[0],exact=True,quiet=True)
+            inside_stack_flag = caller.search(target_potential[0].key + '_stack',location=caller.db.location_objects_nearby[0],exact=True,quiet=True)
             caller.msg('inside stack flag 1: ' + str(inside_stack_flag))
-            #### detect if we are trying to get an item that is in a stack in the room
-            inside_stack_flag = [thing for thing in caller.location.contents if target_potential[0].key + '_stack' == thing.key]
             #### detect if we are trying to get an item that is in a stack near the getter
-            inside_nearby_stack_flag = [thing for thing in caller.location.contents if target_potential[0].key + '_stack' == thing.key and thing in caller.db.objects_nearby and caller in thing.db.objects_nearby]
-            #### detect if we are trying to get an item that is in a stack near another person, or people
-            inside_someones_stack_flag = [thing for thing in caller.location.contents if target_potential[0].key + '_stack' == thing.key and [person for person in caller.location.contents if 'character' in person.tags.all() and person <> caller and thing in person.db.objects_nearby and person in thing.db.objects_nearby]] 
+            '''NOTE: have to ensure that objects_nearby doesn't include objects that are already near another
+                character, by default. They can be included if intentionally interacted with, though.'''
+            inside_stack_flag = [thing for thing in caller.location.contents if target_potential[0].key + '_stack' == thing.key and thing in caller.db.objects_nearby and caller in thing.db.objects_nearby]
             caller.msg('inside stack flag 2: ' + str(inside_stack_flag))
-            '''IN PROGRESS: now what to do here is check all these flags against each other to decide what to do next, then eventually
-                the target_potential that is correct will be the item that the character picks up, most of this stuff below in the next
-                couple of blocks needs to be totally updated still'''
 
             if inside_stack_flag:
                 if len(inside_stack_flag) > 1: caller.msg('CHECK INSIDE_STACK_FLAG: ' + str([obj.key for obj in inside_stack_flag]))
