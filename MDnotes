@@ -1,5 +1,7 @@
 ----GENERAL NOTES---------------------
 IMPORTANT!!!---
+If you get cmdset errors and can't use commands, try replacing settings.py with
+ settings.py.CURRENT!
 There is a quirk in the base evennia file for initial_setup.py located in:
 /evennia/evennia/server/initial_setup.py
 we need to replace that file with the file called

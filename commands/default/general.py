@@ -412,6 +412,7 @@ class CmdGet(MuxCommand):
         caller.msg('target_potential: ' + str(target_potential))
         if not obj2_potential and not obj3_potential and not obj4_potential:
             obj_list = []
+            inside_stack_flag = []
             caller.msg('inside stack flag 1: ' + str(inside_stack_flag))
             #### detect if we are trying to get an item that is in a stack in the room
             inside_stack_flag = [thing for thing in caller.location.contents if target_potential[0].key + '_stack' == thing.key]
@@ -477,12 +478,12 @@ class CmdGet(MuxCommand):
                     #    object
                     else:
                         #obj_list = [obj for obj in caller.location.contents if target_potential[0].key in obj.aliases.all() or target_potential[0].key == obj.key]
-                        obj_list = object_exists
-                        obj = obj_list[0]
+                        ''' change above code to use target_potential where needed '''
+                        obj = target_potential[0]
         
         # catching bad attempts
         #self.msg('obj list: ' + ' '.join([obj.key for obj in obj_list]))
-        if not obj_list:
+        if not target_potential:
             caller.msg("Get what?")
             return
         if not obj:
