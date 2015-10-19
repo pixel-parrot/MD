@@ -426,6 +426,7 @@ class CmdGet(MuxCommand):
                 couple of blocks needs to be totally updated still'''
 
             if inside_stack_flag:
+                caller.msg('in inside_stack_flag')
                 if len(inside_stack_flag) > 1: caller.msg('CHECK INSIDE_STACK_FLAG: ' + str([obj.key for obj in inside_stack_flag]))
                 # this will allow you to get a stackable item from a stack
                 #   in the room without directly interacting with the stack
@@ -438,13 +439,16 @@ class CmdGet(MuxCommand):
                 #    obj = r.choice(obj_list)
                 stack_nearby = [obj for obj in caller.db.objects_nearby if target_potential[0].key + '_stack' in obj.tags.all()]
                 if stack_nearby:
+                    caller.msg('in if stack_nearby')
                     if len(stack_nearby) > 1: caller.msg('CHECK STACK_NEARBY: ' + str([obj.key for obj in stack_nearby]))
                     stack_nearby[0].db.objects_interacting_with.append(caller)
+                    caller.msg('stack_nearby: ' + str(stack_nearby))
                     obj_list = stack_nearby[0].contents
                     obj = r.choice(obj_list)
 
             '''IN PROGRESS : making simple 'get' command work for stacks and non stacks'''
             if not inside_stack_flag:
+                caller.msg('in not inside_stack_flag')
                 # use this to check if we're using a valid object string and that there is a valid object nearby
                 #object_exists = caller.search(target_potential[0].key,location=caller.location,exact=True,quiet=True)
                 object_exists = [obj for obj in caller.db.objects_nearby if (target_potential[0].key == obj.key or target_potential[0].key in obj.aliases.all()) and obj not in caller.contents]
@@ -514,6 +518,7 @@ class CmdGet(MuxCommand):
         obj.db.objects_interacting_with = LT.dedupeList(LT(), obj.db.objects_interacting_with)
 
         # making the move
+        caller.msg('obj at move: ' + str(obj.key) + " " + str(obj.dbref))
         obj.move_to(caller, quiet=True)
 
         # displaying the resulting messages

@@ -1,6 +1,7 @@
 # Stackable object related stuff. 
 
 #from game.gamesrc.objects.object import * 
+import typeclasses
 from typeclasses.object_template import * 
 from tools.text_tools import TextTools
 from tools.list_tools import ListTools as LT
@@ -140,7 +141,7 @@ class StackableObject(DefaultObject):
                 else:
                     print 'at_before_move mark ending else statement'
                     # creating stack-object
-                    create_object(self.typeclass, key = self.key + '_stack', location = destination, home = destination)
+                    create_object(self.__class__, key = self.key + '_stack', location = destination, home = destination)
 
         return True
 
