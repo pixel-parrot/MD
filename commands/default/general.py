@@ -255,6 +255,8 @@ class CmdGet(MuxCommand):
 
         caller = self.caller
 
+        obj = None
+
         # a list of the input words, not including the initial command string
         whole_string_list = self.args.split(' ')
 
@@ -269,11 +271,11 @@ class CmdGet(MuxCommand):
             return
 
         # getting objects in room key strings
-        object_keys = [obj.key for obj in caller.location.contents]
+        object_keys = [tmpobj.key for tmpobj in caller.location.contents]
         object_keys_string = ' '.join(object_keys)
 
         # getting objects in room alias strings
-        object_aliases = [obj.aliases.all() for obj in caller.location.contents]
+        object_aliases = [tmpobj.aliases.all() for tmpobj in caller.location.contents]
         object_aliases_list = []
         for element in object_aliases:
             for sub_element in element:
@@ -282,13 +284,13 @@ class CmdGet(MuxCommand):
 
         # getting container contents in room keys strings
         location_objects = caller.search(caller.location).contents
-        containers = [obj for obj in location_objects if '_stack' in obj.key]
+        containers = [tmpobj for tmpobj in location_objects if '_stack' in tmpobj.key]
         containers_contents_keys = []
         containers_contents_keys_string = ''
         if containers:
             for container in containers:
-                for obj in container.contents:
-                    containers_contents_keys.append(obj.key)
+                for tmpobj in container.contents:
+                    containers_contents_keys.append(tmpobj.key)
             containers_contents_keys_string = ' '.join(containers_contents_keys)
             
         # if needed, below should also get container contents in room alias strings
@@ -332,26 +334,26 @@ class CmdGet(MuxCommand):
         #   and location/object combinations that do not match
         #### getting location 1 objects
         loc_objs_list_1 = []
-        loc_objs_list_1 = [obj for obj in caller.location.contents if obj2 == obj.key or obj2 in obj.aliases.all()]
-        caller.msg('loc_objs_list_1: ' + str([obj.dbref + ' : ' + obj.key for obj in loc_objs_list_1]))
+        loc_objs_list_1 = [tmpobj for tmpobj in caller.location.contents if obj2 == tmpobj.key or obj2 in tmpobj.aliases.all()]
+        caller.msg('loc_objs_list_1: ' + str([tmpobj.dbref + ' : ' + tmpobj.key for tmpobj in loc_objs_list_1]))
         #### getting location 2 objects
         loc_objs_list_2 = []
-        loc_objs_list_2 = [obj for obj in caller.location.contents if obj3 == obj.key or obj3 in obj.aliases.all()]
-        caller.msg('loc_objs_list_2: ' + str([obj.dbref + ' : ' + obj.key for obj in loc_objs_list_2]))
+        loc_objs_list_2 = [tmpobj for tmpobj in caller.location.contents if obj3 == tmpobj.key or obj3 in tmpobj.aliases.all()]
+        caller.msg('loc_objs_list_2: ' + str([tmpobj.dbref + ' : ' + tmpobj.key for tmpobj in loc_objs_list_2]))
         #### getting location 3 objects
         loc_objs_list_3 = []
-        loc_objs_list_3 = [obj for obj in caller.location.contents if obj4 == obj.key or obj4 in obj.aliases.all()]
-        caller.msg('loc_objs_list_3: ' + str([obj.dbref + ' : ' + obj.key for obj in loc_objs_list_3]))
+        loc_objs_list_3 = [tmpobj for tmpobj in caller.location.contents if obj4 == tmpobj.key or obj4 in tmpobj.aliases.all()]
+        caller.msg('loc_objs_list_3: ' + str([tmpobj.dbref + ' : ' + tmpobj.key for tmpobj in loc_objs_list_3]))
         #### getting target objects
         target_list = []
         ######## if not in a stack
-        target_list = [obj for obj in caller.location.contents if obj1 == obj.key or obj1 in obj.aliases.all()]
-        caller.msg('target_list: ' + str([obj.dbref + ' : ' + obj.key for obj in target_list]))
+        target_list = [tmpobj for tmpobj in caller.location.contents if obj1 == tmpobj.key or obj1 in tmpobj.aliases.all()]
+        caller.msg('target_list: ' + str([tmpobj.dbref + ' : ' + tmpobj.key for tmpobj in target_list]))
         ######## if in a stack
         if not target_list:
             caller.msg('container_contents_keys_string: ' + containers_contents_keys_string)
-            target_list = [r.choice(obj.contents) for obj in caller.location.contents if obj1 in containers_contents_keys_string and obj.key.replace('_stack', '') in containers_contents_keys_string]
-            caller.msg('target_list: ' + str([obj.dbref + ' : ' + obj.key for obj in target_list]))
+            target_list = [r.choice(tmpobj.contents) for tmpobj in caller.location.contents if obj1 in containers_contents_keys_string and tmpobj.key.replace('_stack', '') in containers_contents_keys_string]
+            caller.msg('target_list: ' + str([tmpobj.dbref + ' : ' + tmpobj.key for tmpobj in target_list]))
         #### validating by proximity and adjective
         successful, target_potential, obj2_potential, obj3_potential, obj4_potential = PxT.returnAdjacentTargets(PxT(), caller, self.cmdstring, adj1, obj1, target_list, adj2, obj2, loc_objs_list_1, adj3, obj3, loc_objs_list_2, adj4, obj4, loc_objs_list_3)
         caller.msg('adjacency success: ' + str(successful))
@@ -427,20 +429,13 @@ class CmdGet(MuxCommand):
 
             if inside_stack_flag:
                 caller.msg('in inside_stack_flag')
-                if len(inside_stack_flag) > 1: caller.msg('CHECK INSIDE_STACK_FLAG: ' + str([obj.key for obj in inside_stack_flag]))
+                if len(inside_stack_flag) > 1: caller.msg('CHECK INSIDE_STACK_FLAG: ' + str([tmpobj.key for tmpobj in inside_stack_flag]))
                 # this will allow you to get a stackable item from a stack
                 #   in the room without directly interacting with the stack
-                #stack_in_room = caller.search(target_potential[0].key + '_stack',location=caller.location,quiet=True)
-                #if stack_in_room:
-                #    '''needs to be updated for location-tracking'''
-                #    # updating the stack to have the character in the interacting list
-                #    stack_in_room[0].db.objects_interacting_with.append(caller)
-                #    obj_list = stack_in_room[0].contents
-                #    obj = r.choice(obj_list)
-                stack_nearby = [obj for obj in caller.db.objects_nearby if target_potential[0].key + '_stack' in obj.tags.all()]
+                stack_nearby = [tmpobj for tmpobj in caller.db.objects_nearby if target_potential[0].key + '_stack' in tmpobj.tags.all()]
                 if stack_nearby:
                     caller.msg('in if stack_nearby')
-                    if len(stack_nearby) > 1: caller.msg('CHECK STACK_NEARBY: ' + str([obj.key for obj in stack_nearby]))
+                    if len(stack_nearby) > 1: caller.msg('CHECK STACK_NEARBY: ' + str([tmpobj.key for tmpobj in stack_nearby]))
                     stack_nearby[0].db.objects_interacting_with.append(caller)
                     caller.msg('stack_nearby: ' + str(stack_nearby))
                     obj_list = stack_nearby[0].contents
@@ -451,8 +446,8 @@ class CmdGet(MuxCommand):
                 caller.msg('in not inside_stack_flag')
                 # use this to check if we're using a valid object string and that there is a valid object nearby
                 #object_exists = caller.search(target_potential[0].key,location=caller.location,exact=True,quiet=True)
-                object_exists = [obj for obj in caller.db.objects_nearby if (target_potential[0].key == obj.key or target_potential[0].key in obj.aliases.all()) and obj not in caller.contents]
-                print 'object_exists: ' + str([obj.key for obj in object_exists])
+                object_exists = [tmpobj for tmpobj in caller.db.objects_nearby if (target_potential[0].key == tmpobj.key or target_potential[0].key in tmpobj.aliases.all()) and tmpobj not in caller.contents]
+                print 'object_exists: ' + str([tmpobj.key for tmpobj in object_exists])
                 if object_exists:
                     #obj_in_location_tags = caller.search(target_potential[0].key,location=caller.location,exact=True,quiet=True)[0].tags.all()
                     #obj_in_location_key = caller.search(target_potential[0].key,location=caller.location,exact=True,quiet=True)[0].key
@@ -460,9 +455,9 @@ class CmdGet(MuxCommand):
                     # mark if we are tyring to pick up a stack or not, True if
                     #  we are trying to interact with a stack, False if not
                     #stack_flag = 'container' in obj_in_location_tags and (target_potential[0].key in obj_in_location_key or target_potential[0].key in obj_in_location_aliases)
-                    print 'object_exists: ' + str([obj.key for obj in object_exists])
-                    stack_flag = [obj for obj in object_exists if 'container' in obj.tags.all()]
-                    print 'stack_flag: ' + str([obj.key for obj in stack_flag])
+                    print 'object_exists: ' + str([tmpobj.key for tmpobj in object_exists])
+                    stack_flag = [tmpobj for tmpobj in object_exists if 'container' in tmpobj.tags.all()]
+                    print 'stack_flag: ' + str([tmpobj.key for tmpobj in stack_flag])
                     if stack_flag:
                         # this will allow you specify the stack-object you want to get
                         #   by also using the stack_size description to get it. 
@@ -470,12 +465,12 @@ class CmdGet(MuxCommand):
                         # now find the specific object desired
                         if stack_size_string:
                             #obj_list = [obj for obj in caller.location.contents if target_potential[0].key in obj.aliases.all() and obj.db.stack_size == stack_size_string]
-                            obj_list = [obj for obj in stack_flag if obj.db.stack_size == stack_size_string]
+                            obj_list = [tmpobj for tmpobj in stack_flag if tmpobj.db.stack_size == stack_size_string]
                             if obj_list:
                                 obj = r.choice(obj_list)
                         else:
                             #obj_list = [obj for obj in caller.location.contents if target_potential[0].key in obj.aliases.all()]
-                            obj_list = [obj for obj in stack_flag]
+                            obj_list = [tmpobj for tmpobj in stack_flag]
                             if obj_list:
                                 obj = r.choice(obj_list)
                     # since it's not inside a stack, and not a stack itself, it is just a 'normal'
@@ -491,6 +486,7 @@ class CmdGet(MuxCommand):
             caller.msg("Get what?")
             return
         if not obj:
+            caller.msg("There aren't any within reach.")
             return
         if caller == obj:
             caller.msg("You can't get yourself.")
