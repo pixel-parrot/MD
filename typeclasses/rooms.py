@@ -96,7 +96,7 @@ class Room(DefaultRoom):
             if landmark.db.objects_nearby:
                 landmark.db.in_room_description = landmark.db.in_room_description + ' Near this ' + landmark.key + ' '
                 # getting nearby objects that are not the looker
-                nearby_objects = [obj for obj in landmark.db.objects_nearby if obj not in tag_contained and obj <> looker]
+                nearby_objects = [obj for obj in landmark.db.objects_nearby if obj not in tag_contained and obj <> looker and obj <> self]
                 for i,obj in enumerate(nearby_objects):
                     object_string = obj.db.object_title
                     # setting up character string for if name is known

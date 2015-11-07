@@ -274,6 +274,7 @@ class ProximityTools:
             successful = False
             return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
         
+        caller.msg('target_potential: ' + str([obj.dbref for obj in target_potential]))
         return successful, target_potential, obj2_potential, obj3_potential, obj4_potential
 
 

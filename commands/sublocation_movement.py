@@ -101,6 +101,7 @@ class SublocationMovement(BaseCommand):
         object3_list = [obj for obj in caller.location.contents if obj3 == obj.key or obj3 in obj.aliases.all()]
         object4_list = [obj for obj in caller.location.contents if obj4 == obj.key or obj4 in obj.aliases.all()]
 
+
         # getting potential targets based on proximity
         successful, target_potential, obj2_potential, obj3_potential, obj4_potential = PxT.returnAdjacentTargets(PxT(), caller, self.cmdstring, adj1, obj1, object1_list, adj2, obj2, object2_list, adj3, obj3, object3_list, adj4, obj4, object4_list)
         # if there was a proximity error, don't continue
@@ -108,19 +109,14 @@ class SublocationMovement(BaseCommand):
             return
                 
         # remove any references to the mover from any location_objects_nearby and objects_nearby
-        for obj in caller.db.location_objects_nearby:
-            caller.msg('location_objs_nearby: ' + str(obj.key))
-            if obj.db.location_objects_nearby:
-                if caller in obj.db.location_objects_nearby:
-                    obj.db.location_objects_nearby.remove(caller)
-                if caller in obj.db.objects_nearby:
-                    obj.db.objects_nearby.remove(caller)
-        for obj in caller.db.objects_nearby:
-            if obj.db.objects_nearby:
-                if caller in obj.db.objects_nearby:
-                    obj.db.objects_nearby.remove(caller)
-                if caller in obj.db.location_objects_nearby:
-                    obj.db.location_objects_nearby.remove(caller)
+        for obj in [obj for obj in caller.location.contents if obj.db.location_objects_nearby or obj.db.objects_nearby]:
+            if caller in obj.db.location_objects_nearby:
+                obj.db.location_objects_nearby.remove(caller)
+            if caller in obj.db.objects_nearby:
+                obj.db.objects_nearby.remove(caller)
+        # clear out the mover's location_objects_nearby and objects_nearby
+        caller.db.location_objects_nearby = []
+        caller.db.objects_nearby = []
 
         # make the move
         if len(target_potential) == 1:
@@ -135,10 +131,15 @@ class SublocationMovement(BaseCommand):
                 target3 = obj3_potential[0]
                 #caller.msg('final target 3: ' + str(target3.dbref) + ': ' + str(target3.key))
         ##### update the mover's locations
-        if target.db.location_objects_nearby:
-            caller.db.location_objects_nearby = [target.db.location_objects_nearby[0]]
         if 'character' in target.tags.all():
-            caller.db.location_objects_nearby.append(target)
+            caller.db.location_objects_nearby.extend([target.db.location_objects_nearby[0], target])
+        if 'stationary' in target.tags.all():
+            caller.db.location_objects_nearby = [target]
+        for loc in [loc for loc in target.db.location_objects_nearby if loc <> caller]:
+            caller.msg('loc: ' + loc.key)
+            caller.db.location_objects_nearby.append(loc)
+        #if target.db.location_objects_nearby and caller not in target.db.location_objects_nearby:
+            #caller.db.location_objects_nearby = [target.db.location_objects_nearby[0]]
         caller.db.objects_nearby = [target.location]
         caller.db.objects_nearby.append(target)
         ##### update the target's objects_nearby and location_objects_nearby as needed
@@ -149,8 +150,7 @@ class SublocationMovement(BaseCommand):
         target.db.objects_nearby = LT.dedupeList(LT(), target.db.objects_nearby)
         ######## also update the closest location_object that the target is near to now
         ########    also have the mover
-        '''MAYBE FIX OR REMOVE THIS IF CONDITION BELOW...ARE ROOMS SUPPOSED TO BE HERE AUTO? OR IS IT JUST OBJ_NEAR?'''
-        if target.db.location_objects_nearby:
+        if target.db.location_objects_nearby and caller <> target.db.location_objects_nearby[0]:
             if 'character' in caller.tags.all():
                 target.db.location_objects_nearby[0].db.location_objects_nearby.append(caller)
             target.db.location_objects_nearby[0].db.objects_nearby.append(caller)
