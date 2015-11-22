@@ -203,6 +203,9 @@ class StackableObject(DefaultObject):
             # update objs in container with container's, then insert the container as the first obj
             obj.db.objects_nearby = self.db.objects_nearby
             obj.db.objects_nearby.insert(0,self)
+            # update container to have each contained object as an objects_nearby
+            self.db.objects_nearby.append(obj)
+
 
         self.db.objects_nearby = LT.dedupeList(LT(), self.db.objects_nearby)
 

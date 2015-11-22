@@ -138,8 +138,6 @@ class SublocationMovement(BaseCommand):
         for loc in [loc for loc in target.db.location_objects_nearby if loc <> caller]:
             caller.msg('loc: ' + loc.key)
             caller.db.location_objects_nearby.append(loc)
-        #if target.db.location_objects_nearby and caller not in target.db.location_objects_nearby:
-            #caller.db.location_objects_nearby = [target.db.location_objects_nearby[0]]
         caller.db.objects_nearby = [target.location]
         caller.db.objects_nearby.append(target)
         ##### update the target's objects_nearby and location_objects_nearby as needed
@@ -148,12 +146,43 @@ class SublocationMovement(BaseCommand):
         target.db.objects_nearby.append(caller)
         target.db.location_objects_nearby = LT.dedupeList(LT(), target.db.location_objects_nearby)
         target.db.objects_nearby = LT.dedupeList(LT(), target.db.objects_nearby)
+        '''11.21.2015'''
+        ######## update any characters or things near the target to have the mover as an object_nearby
+        ########    but only if the target is also their primary location_object_nearby
+        for tmpobj in [tmpobj for tmpobj in target.db.objects_nearby if 'room' not in tmpobj.tags.all() and target == tmpobj.db.location_objects_nearby[0]]:
+            caller.msg('testing mark 1')
+            tmpobj.db.objects_nearby.append(caller)
+            tmpobj.db.objects_nearby = LT.dedupeList(LT(), tmpobj.db.objects_nearby)
+        tmpcontainers = []
+        for tmpobj in target.db.objects_nearby:
+            if 'container' in tmpobj.tags.all():
+                caller.msg('testing mark 2')
+                tmpcontainers.append(tmpobj)
+        for tmpobj in tmpcontainers:
+            caller.msg('testing mark 3')
+            caller.msg(tmpobj.key + ' contents: ' + str(tmpobj.contents))
+            for tmpobj2 in tmpobj.contents:
+                caller.msg('testing mark 4')
+                tmpobj2.db.objects_nearby.append(caller)
+                tmpobj2.db.objects_nearby = LT.dedupeList(LT(), tmpobj2.db.objects_nearby)
+
         ######## also update the closest location_object that the target is near to now
         ########    also have the mover
+        secondary_location_object = False
         if target.db.location_objects_nearby and caller <> target.db.location_objects_nearby[0]:
+            secondary_location_object = target.db.location_objects_nearby[0]
             if 'character' in caller.tags.all():
-                target.db.location_objects_nearby[0].db.location_objects_nearby.append(caller)
-            target.db.location_objects_nearby[0].db.objects_nearby.append(caller)
+                secondary_location_object.db.location_objects_nearby.append(caller)
+            secondary_location_object.db.objects_nearby.append(caller)
+            # now update any 'things' that are near the secondary_location_object that have
+            #  no other primary location_objects (like other characters or other objects)
+            #  since they are only secondarily near each other, the char will be only in objects_nearby
+            #  and not location_objects_nearby
+            for obj in [obj for obj in secondary_location_object.db.objects_nearby if 'thing' in obj.tags.all() and secondary_location_object == obj.db.location_objects_nearby[0]]:
+                obj.db.objects_nearby.append(caller)
+                caller.db.objects_nearby.append(obj)
+
+            #### remove any possible duplicates
             target.db.location_objects_nearby[0].db.location_objects_nearby = LT.dedupeList(LT(), target.db.location_objects_nearby[0].db.location_objects_nearby)
             target.db.location_objects_nearby[0].db.objects_nearby = LT.dedupeList(LT(), target.db.location_objects_nearby[0].db.objects_nearby)
         ##### update the target2's objects_nearby and location_objects_nearby as needed
